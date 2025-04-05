@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
+import { FileText, Briefcase, Target } from "lucide-react";
 
 const formSchema = z.object({
   businessName: z.string().min(2, "Business name must be at least 2 characters"),
@@ -84,95 +85,126 @@ export function BusinessPlanForm() {
   }
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <div className="rounded-lg border p-4 space-y-6">
-          <h2 className="text-xl font-semibold">Business Information</h2>
-          <FormField
-            control={form.control}
-            name="businessName"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Business Name</FormLabel>
-                <FormControl>
-                  <Input placeholder="Enter your business name" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="industry"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Industry</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
+    <>
+      {isPending && (
+        <div className="fixed inset-0 bg-gray-900/80 backdrop-blur-sm z-50 flex items-center justify-center">
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg max-w-md text-center space-y-4">
+            <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Generating Business Plan</h3>
+            <p className="text-gray-600 dark:text-gray-400">
+              Analyzing your business details and creating your plan. This may take 2-3 minutes.
+            </p>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-pink-500 dark:border-pink-400 mx-auto"></div>
+          </div>
+        </div>
+      )}
+
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <div className="rounded-lg border border-purple-100 dark:border-purple-900 bg-white dark:bg-gray-800 p-6 space-y-6 shadow-sm">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 flex items-center gap-2">
+              <Briefcase className="h-5 w-5 text-pink-600 dark:text-pink-400" />
+              Business Information
+            </h2>
+            <FormField
+              control={form.control}
+              name="businessName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-gray-700 dark:text-gray-300">Business Name</FormLabel>
                   <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select your industry" />
-                    </SelectTrigger>
+                    <Input 
+                      placeholder="Enter your business name" 
+                      {...field} 
+                      className="border-gray-200 dark:border-gray-700 focus:border-pink-500 dark:focus:border-pink-400"
+                    />
                   </FormControl>
-                  <SelectContent>
-                    <SelectItem value="Manufacturing">Manufacturing</SelectItem>
-                    <SelectItem value="Services">Services</SelectItem>
-                    <SelectItem value="Retail">Retail</SelectItem>
-                    <SelectItem value="Technology">Technology</SelectItem>
-                    <SelectItem value="Agriculture">Agriculture</SelectItem>
-                    <SelectItem value="Other">Other</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
+                  <FormMessage className="text-red-500 dark:text-red-400" />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="industry"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-gray-700 dark:text-gray-300">Industry</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger className="border-gray-200 dark:border-gray-700 focus:ring-pink-500 dark:focus:ring-pink-400">
+                        <SelectValue placeholder="Select your industry" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent className="border-purple-100 dark:border-purple-900">
+                      <SelectItem value="Manufacturing">Manufacturing</SelectItem>
+                      <SelectItem value="Services">Services</SelectItem>
+                      <SelectItem value="Retail">Retail</SelectItem>
+                      <SelectItem value="Technology">Technology</SelectItem>
+                      <SelectItem value="Agriculture">Agriculture</SelectItem>
+                      <SelectItem value="Other">Other</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage className="text-red-500 dark:text-red-400" />
+                </FormItem>
+              )}
+            />
+          </div>
 
-        <div className="rounded-lg border p-4 space-y-6">
-          <h2 className="text-xl font-semibold">Business Details</h2>
-          <FormField
-            control={form.control}
-            name="businessIdea"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Business Idea</FormLabel>
-                <FormControl>
-                  <Textarea
-                    placeholder="Describe your business idea in detail..."
-                    className="min-h-[100px]"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="targetMarket"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Target Market</FormLabel>
-                <FormControl>
-                  <Textarea
-                    placeholder="Describe your target market..."
-                    className="min-h-[100px]"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
+          <div className="rounded-lg border border-purple-100 dark:border-purple-900 bg-white dark:bg-gray-800 p-6 space-y-6 shadow-sm">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 flex items-center gap-2">
+              <FileText className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+              Business Details
+            </h2>
+            <FormField
+              control={form.control}
+              name="businessIdea"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-gray-700 dark:text-gray-300">Business Idea</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder="Describe your business idea in detail..."
+                      className="min-h-[100px] border-gray-200 dark:border-gray-700 focus:border-pink-500 dark:focus:border-pink-400"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage className="text-red-500 dark:text-red-400" />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="targetMarket"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-gray-700 dark:text-gray-300 flex items-center gap-1.5">
+                    <Target className="h-3.5 w-3.5 text-pink-600 dark:text-pink-400" />
+                    Target Market
+                  </FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder="Describe your target market..."
+                      className="min-h-[100px] border-gray-200 dark:border-gray-700 focus:border-pink-500 dark:focus:border-pink-400"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage className="text-red-500 dark:text-red-400" />
+                </FormItem>
+              )}
+            />
+          </div>
 
-        <Button type="submit" className="w-full" disabled={isPending}>
-          {isPending ? "Generating Plan..." : "Generate Business Plan"}
-        </Button>
-      </form>
-    </Form>
+          <Button 
+            type="submit" 
+            className="w-full bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white" 
+            disabled={isPending}
+          >
+            {isPending ? "Generating Plan..." : "Generate Business Plan"}
+          </Button>
+        </form>
+      </Form>
+    </>
   );
 } 

@@ -16,6 +16,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
+import { UserCircle, Building, Camera, Phone, Home, Mail } from 'lucide-react';
 
 const profileFormSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
@@ -175,11 +176,11 @@ export default function MyProfilePage() {
 
   if (status === 'loading' || !userData) {
     return (
-      <div className="container py-10">
-        <Card>
+      <div className="container mx-auto py-8 px-4">
+        <Card className="border-purple-100 dark:border-purple-900 bg-white dark:bg-gray-800 shadow-sm rounded-xl">
           <CardContent className="p-6">
             <div className="flex flex-col items-center justify-center min-h-[400px]">
-              <p>Loading profile...</p>
+              <p className="text-gray-600 dark:text-gray-400">Loading profile...</p>
             </div>
           </CardContent>
         </Card>
@@ -188,37 +189,61 @@ export default function MyProfilePage() {
   }
 
   return (
-    <div className="container py-10">
+    <div className="container mx-auto py-8 px-4">
       <div className="flex flex-col space-y-8">
-        <div className="flex items-center justify-between">
-          <h1 className="text-3xl font-bold">My Profile</h1>
+        <div className="flex items-center">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-2">
+            <UserCircle className="h-6 w-6 text-pink-600 dark:text-pink-400" />
+            My Profile
+          </h1>
         </div>
 
-        <div className="flex items-center space-x-6 pb-6">
-          <Avatar className="h-24 w-24">
+        <div className="flex flex-col md:flex-row md:items-center gap-6 pb-6 bg-white dark:bg-gray-800 rounded-xl p-6 border border-purple-100 dark:border-purple-900 shadow-sm">
+          <Avatar className="h-24 w-24 border-2 border-pink-200 dark:border-pink-800">
             <AvatarImage src={userData.avatar?.url} />
-            <AvatarFallback>{userData.name?.charAt(0)}</AvatarFallback>
+            <AvatarFallback className="bg-gradient-to-r from-pink-400 to-purple-400 text-white">
+              {userData.name?.charAt(0)}
+            </AvatarFallback>
           </Avatar>
           <div>
-            <h2 className="text-2xl font-semibold">{userData.name}</h2>
-            <p className="text-muted-foreground">{userData.email}</p>
-            <Button variant="outline" className="mt-2">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">{userData.name}</h2>
+            <p className="text-gray-600 dark:text-gray-400">{userData.email}</p>
+            <Button 
+              variant="outline" 
+              className="mt-3 border-gray-200 dark:border-gray-700 text-pink-600 dark:text-pink-400 hover:bg-pink-50 dark:hover:bg-pink-900/20"
+            >
+              <Camera className="mr-2 h-4 w-4" />
               Change Avatar
             </Button>
           </div>
         </div>
 
         <Tabs defaultValue="personal">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="personal">Personal Information</TabsTrigger>
-            <TabsTrigger value="business">Business Profile</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-2 bg-gray-100 dark:bg-gray-900 p-1">
+            <TabsTrigger 
+              value="personal" 
+              className="flex items-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-pink-400 data-[state=active]:to-purple-400 data-[state=active]:text-white dark:data-[state=active]:text-white"
+            >
+              <UserCircle className="h-4 w-4" />
+              Personal Information
+            </TabsTrigger>
+            <TabsTrigger 
+              value="business" 
+              className="flex items-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-pink-400 data-[state=active]:to-purple-400 data-[state=active]:text-white dark:data-[state=active]:text-white"
+            >
+              <Building className="h-4 w-4" />
+              Business Profile
+            </TabsTrigger>
           </TabsList>
           
           <TabsContent value="personal" className="space-y-4 mt-4">
-            <Card>
+            <Card className="border-purple-100 dark:border-purple-900 bg-white dark:bg-gray-800 shadow-sm rounded-xl">
               <CardHeader>
-                <CardTitle>Personal Information</CardTitle>
-                <CardDescription>
+                <CardTitle className="text-gray-900 dark:text-gray-100 flex items-center gap-2">
+                  <UserCircle className="h-5 w-5 text-pink-600 dark:text-pink-400" />
+                  Personal Information
+                </CardTitle>
+                <CardDescription className="text-gray-600 dark:text-gray-400">
                   Update your personal information and contact details.
                 </CardDescription>
               </CardHeader>
@@ -230,11 +255,14 @@ export default function MyProfilePage() {
                       name="name"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Full Name</FormLabel>
+                          <FormLabel className="text-gray-700 dark:text-gray-300">Full Name</FormLabel>
                           <FormControl>
-                            <Input {...field} />
+                            <Input 
+                              {...field} 
+                              className="border-gray-200 dark:border-gray-700 focus:border-pink-500 dark:focus:border-pink-400"
+                            />
                           </FormControl>
-                          <FormMessage />
+                          <FormMessage className="text-red-500 dark:text-red-400" />
                         </FormItem>
                       )}
                     />
@@ -243,14 +271,21 @@ export default function MyProfilePage() {
                       name="email"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Email</FormLabel>
+                          <FormLabel className="text-gray-700 dark:text-gray-300 flex items-center gap-1.5">
+                            <Mail className="h-3.5 w-3.5" />
+                            Email
+                          </FormLabel>
                           <FormControl>
-                            <Input {...field} disabled />
+                            <Input 
+                              {...field} 
+                              disabled
+                              className="border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800"
+                            />
                           </FormControl>
-                          <FormDescription>
+                          <FormDescription className="text-gray-500 dark:text-gray-500">
                             Email cannot be changed. Contact support if needed.
                           </FormDescription>
-                          <FormMessage />
+                          <FormMessage className="text-red-500 dark:text-red-400" />
                         </FormItem>
                       )}
                     />
@@ -259,11 +294,17 @@ export default function MyProfilePage() {
                       name="phone"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Phone Number</FormLabel>
+                          <FormLabel className="text-gray-700 dark:text-gray-300 flex items-center gap-1.5">
+                            <Phone className="h-3.5 w-3.5" />
+                            Phone Number
+                          </FormLabel>
                           <FormControl>
-                            <Input {...field} />
+                            <Input 
+                              {...field} 
+                              className="border-gray-200 dark:border-gray-700 focus:border-pink-500 dark:focus:border-pink-400"
+                            />
                           </FormControl>
-                          <FormMessage />
+                          <FormMessage className="text-red-500 dark:text-red-400" />
                         </FormItem>
                       )}
                     />
@@ -272,15 +313,25 @@ export default function MyProfilePage() {
                       name="address"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Address</FormLabel>
+                          <FormLabel className="text-gray-700 dark:text-gray-300 flex items-center gap-1.5">
+                            <Home className="h-3.5 w-3.5" />
+                            Address
+                          </FormLabel>
                           <FormControl>
-                            <Input {...field} />
+                            <Input 
+                              {...field} 
+                              className="border-gray-200 dark:border-gray-700 focus:border-pink-500 dark:focus:border-pink-400"
+                            />
                           </FormControl>
-                          <FormMessage />
+                          <FormMessage className="text-red-500 dark:text-red-400" />
                         </FormItem>
                       )}
                     />
-                    <Button type="submit" disabled={loading}>
+                    <Button 
+                      type="submit" 
+                      disabled={loading}
+                      className="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white"
+                    >
                       {loading ? 'Saving...' : 'Save Changes'}
                     </Button>
                   </form>
@@ -290,10 +341,13 @@ export default function MyProfilePage() {
           </TabsContent>
           
           <TabsContent value="business" className="space-y-4 mt-4">
-            <Card>
+            <Card className="border-purple-100 dark:border-purple-900 bg-white dark:bg-gray-800 shadow-sm rounded-xl">
               <CardHeader>
-                <CardTitle>Business Profile</CardTitle>
-                <CardDescription>
+                <CardTitle className="text-gray-900 dark:text-gray-100 flex items-center gap-2">
+                  <Building className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+                  Business Profile
+                </CardTitle>
+                <CardDescription className="text-gray-600 dark:text-gray-400">
                   Update your business information. This helps us tailor our services to your needs.
                 </CardDescription>
               </CardHeader>
@@ -305,31 +359,35 @@ export default function MyProfilePage() {
                       name="businessName"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Business Name</FormLabel>
+                          <FormLabel className="text-gray-700 dark:text-gray-300">Business Name</FormLabel>
                           <FormControl>
-                            <Input {...field} />
+                            <Input 
+                              {...field} 
+                              className="border-gray-200 dark:border-gray-700 focus:border-pink-500 dark:focus:border-pink-400"
+                            />
                           </FormControl>
-                          <FormMessage />
+                          <FormMessage className="text-red-500 dark:text-red-400" />
                         </FormItem>
                       )}
                     />
+                    
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <FormField
                         control={businessForm.control}
                         name="industry"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Industry</FormLabel>
+                            <FormLabel className="text-gray-700 dark:text-gray-300">Industry</FormLabel>
                             <Select
                               value={field.value}
                               onValueChange={field.onChange}
                             >
                               <FormControl>
-                                <SelectTrigger>
+                                <SelectTrigger className="border-gray-200 dark:border-gray-700 focus:ring-pink-500 dark:focus:ring-pink-400">
                                   <SelectValue placeholder="Select an industry" />
                                 </SelectTrigger>
                               </FormControl>
-                              <SelectContent>
+                              <SelectContent className="border-purple-100 dark:border-purple-900">
                                 <SelectItem value="Manufacturing">Manufacturing</SelectItem>
                                 <SelectItem value="Services">Services</SelectItem>
                                 <SelectItem value="Retail">Retail</SelectItem>
@@ -338,55 +396,58 @@ export default function MyProfilePage() {
                                 <SelectItem value="Other">Other</SelectItem>
                               </SelectContent>
                             </Select>
-                            <FormMessage />
+                            <FormMessage className="text-red-500 dark:text-red-400" />
                           </FormItem>
                         )}
                       />
+                      
                       <FormField
                         control={businessForm.control}
                         name="stage"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Business Stage</FormLabel>
+                            <FormLabel className="text-gray-700 dark:text-gray-300">Business Stage</FormLabel>
                             <Select
                               value={field.value}
                               onValueChange={field.onChange}
                             >
                               <FormControl>
-                                <SelectTrigger>
+                                <SelectTrigger className="border-gray-200 dark:border-gray-700 focus:ring-pink-500 dark:focus:ring-pink-400">
                                   <SelectValue placeholder="Select business stage" />
                                 </SelectTrigger>
                               </FormControl>
-                              <SelectContent>
+                              <SelectContent className="border-purple-100 dark:border-purple-900">
                                 <SelectItem value="Ideation">Ideation</SelectItem>
                                 <SelectItem value="Startup">Startup</SelectItem>
                                 <SelectItem value="Growth">Growth</SelectItem>
                                 <SelectItem value="Mature">Mature</SelectItem>
                               </SelectContent>
                             </Select>
-                            <FormMessage />
+                            <FormMessage className="text-red-500 dark:text-red-400" />
                           </FormItem>
                         )}
                       />
                     </div>
-                    <Separator />
+                    
+                    <Separator className="bg-gray-200 dark:bg-gray-700" />
+
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <FormField
                         control={businessForm.control}
                         name="type"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Business Type</FormLabel>
+                            <FormLabel className="text-gray-700 dark:text-gray-300">Business Type</FormLabel>
                             <Select
                               value={field.value}
                               onValueChange={field.onChange}
                             >
                               <FormControl>
-                                <SelectTrigger>
+                                <SelectTrigger className="border-gray-200 dark:border-gray-700 focus:ring-pink-500 dark:focus:ring-pink-400">
                                   <SelectValue placeholder="Select business type" />
                                 </SelectTrigger>
                               </FormControl>
-                              <SelectContent>
+                              <SelectContent className="border-purple-100 dark:border-purple-900">
                                 <SelectItem value="Proprietorship">Proprietorship</SelectItem>
                                 <SelectItem value="Partnership">Partnership</SelectItem>
                                 <SelectItem value="LLP">LLP</SelectItem>
@@ -394,7 +455,7 @@ export default function MyProfilePage() {
                                 <SelectItem value="Other">Other</SelectItem>
                               </SelectContent>
                             </Select>
-                            <FormMessage />
+                            <FormMessage className="text-red-500 dark:text-red-400" />
                           </FormItem>
                         )}
                       />
@@ -403,17 +464,17 @@ export default function MyProfilePage() {
                         name="state"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>State</FormLabel>
+                            <FormLabel className="text-gray-700 dark:text-gray-300">State</FormLabel>
                             <Select
                               value={field.value}
                               onValueChange={field.onChange}
                             >
                               <FormControl>
-                                <SelectTrigger>
+                                <SelectTrigger className="border-gray-200 dark:border-gray-700 focus:ring-pink-500 dark:focus:ring-pink-400">
                                   <SelectValue placeholder="Select state" />
                                 </SelectTrigger>
                               </FormControl>
-                              <SelectContent>
+                              <SelectContent className="border-purple-100 dark:border-purple-900">
                                 <SelectItem value="All">All India</SelectItem>
                                 <SelectItem value="Delhi">Delhi</SelectItem>
                                 <SelectItem value="Maharashtra">Maharashtra</SelectItem>
@@ -425,7 +486,7 @@ export default function MyProfilePage() {
                                 <SelectItem value="Other">Other</SelectItem>
                               </SelectContent>
                             </Select>
-                            <FormMessage />
+                            <FormMessage className="text-red-500 dark:text-red-400" />
                           </FormItem>
                         )}
                       />
@@ -435,18 +496,26 @@ export default function MyProfilePage() {
                       name="udyamNumber"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Udyam Registration Number</FormLabel>
+                          <FormLabel className="text-gray-700 dark:text-gray-300">Udyam Registration Number</FormLabel>
                           <FormControl>
-                            <Input {...field} placeholder="UDYAM-XX-XX-XXXXXXX" />
+                            <Input 
+                              {...field} 
+                              placeholder="UDYAM-XX-XX-XXXXXXX"
+                              className="border-gray-200 dark:border-gray-700 focus:border-pink-500 dark:focus:border-pink-400"
+                            />
                           </FormControl>
-                          <FormDescription>
+                          <FormDescription className="text-gray-500 dark:text-gray-500">
                             Optional: Enter your Udyam registration number if available.
                           </FormDescription>
-                          <FormMessage />
+                          <FormMessage className="text-red-500 dark:text-red-400" />
                         </FormItem>
                       )}
                     />
-                    <Button type="submit" disabled={loading}>
+                    <Button 
+                      type="submit" 
+                      disabled={loading}
+                      className="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white"
+                    >
                       {loading ? 'Saving...' : 'Save Changes'}
                     </Button>
                   </form>

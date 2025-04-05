@@ -11,6 +11,7 @@ import {
 import { ComplianceChecklist } from "./compliance-checklist";
 import { LegalGuides } from "./legal-guides";
 import { LegalAiAssistant } from "./legal-ai-assistant";
+import { Scale, BookOpen, BrainCircuit } from "lucide-react";
 
 interface LegalTaxHubProps {
   complianceItems: IComplianceItem[];
@@ -32,14 +33,35 @@ export function LegalTaxHub({ complianceItems, businessType, state }: LegalTaxHu
   };
 
   return (
-    <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-      <TabsList className="grid w-full grid-cols-3">
-        <TabsTrigger value="compliance">Compliance Checklist</TabsTrigger>
-        <TabsTrigger value="guides">Legal & Tax Guides</TabsTrigger>
-        <TabsTrigger value="assistant">AI Legal Assistant</TabsTrigger>
+    <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+      <TabsList className="grid w-full grid-cols-3 bg-gray-100 dark:bg-gray-900 p-1">
+        <TabsTrigger 
+          value="compliance" 
+          className="flex items-center justify-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-pink-400 data-[state=active]:to-purple-400 data-[state=active]:text-white dark:data-[state=active]:text-white"
+        >
+          <Scale className="h-4 w-4" />
+          <span className="hidden sm:inline">Compliance Checklist</span>
+          <span className="sm:hidden">Compliance</span>
+        </TabsTrigger>
+        <TabsTrigger 
+          value="guides" 
+          className="flex items-center justify-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-pink-400 data-[state=active]:to-purple-400 data-[state=active]:text-white dark:data-[state=active]:text-white"
+        >
+          <BookOpen className="h-4 w-4" />
+          <span className="hidden sm:inline">Legal & Tax Guides</span>
+          <span className="sm:hidden">Guides</span>
+        </TabsTrigger>
+        <TabsTrigger 
+          value="assistant" 
+          className="flex items-center justify-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-pink-400 data-[state=active]:to-purple-400 data-[state=active]:text-white dark:data-[state=active]:text-white"
+        >
+          <BrainCircuit className="h-4 w-4" />
+          <span className="hidden sm:inline">AI Legal Assistant</span>
+          <span className="sm:hidden">Assistant</span>
+        </TabsTrigger>
       </TabsList>
 
-      <TabsContent value="compliance">
+      <TabsContent value="compliance" className="bg-white dark:bg-gray-800 rounded-xl border border-purple-100 dark:border-purple-900 p-5 shadow-sm">
         <ComplianceChecklist 
           items={localItems}
           businessType={businessType}
@@ -47,14 +69,14 @@ export function LegalTaxHub({ complianceItems, businessType, state }: LegalTaxHu
         />
       </TabsContent>
 
-      <TabsContent value="guides">
+      <TabsContent value="guides" className="bg-white dark:bg-gray-800 rounded-xl border border-purple-100 dark:border-purple-900 p-5 shadow-sm">
         <LegalGuides 
           businessType={businessType}
           state={state}
         />
       </TabsContent>
 
-      <TabsContent value="assistant">
+      <TabsContent value="assistant" className="bg-white dark:bg-gray-800 rounded-xl border border-purple-100 dark:border-purple-900 p-5 shadow-sm">
         <LegalAiAssistant 
           businessType={businessType}
           state={state}

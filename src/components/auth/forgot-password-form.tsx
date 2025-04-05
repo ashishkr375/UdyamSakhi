@@ -59,12 +59,12 @@ export function ForgotPasswordForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        <div className="space-y-2 text-center">
-          <h1 className="text-2xl font-semibold tracking-tight">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+        <div className="space-y-3 text-center mb-4">
+          <h1 className="text-2xl font-semibold tracking-tight text-gray-800 dark:text-gray-200">
             Forgot your password?
           </h1>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-gray-600 dark:text-gray-400">
             Enter your email address and we'll send you a link to reset your password.
           </p>
         </div>
@@ -73,19 +73,28 @@ export function ForgotPasswordForm() {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel className="text-gray-700 dark:text-gray-300">Email</FormLabel>
               <FormControl>
-                <Input placeholder="Enter your email" type="email" {...field} />
+                <Input 
+                  placeholder="Enter your email" 
+                  type="email" 
+                  className="border-gray-300 dark:border-gray-700 focus:border-purple-400 dark:focus:border-purple-500 focus:ring-purple-300 dark:focus:ring-purple-700" 
+                  {...field} 
+                />
               </FormControl>
-              <FormMessage />
+              <FormMessage className="text-pink-600 dark:text-pink-400" />
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full" disabled={isPending}>
+        <Button 
+          type="submit" 
+          className="w-full bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-300 dark:focus:ring-purple-800 mt-2" 
+          disabled={isPending}
+        >
           {isPending ? "Sending link..." : "Send Reset Link"}
         </Button>
-        <div className="text-center text-sm">
-          <Link href="/login" className="text-primary hover:underline">
+        <div className="text-center text-sm mt-6">
+          <Link href="/login" className="text-pink-600 hover:text-pink-700 dark:text-pink-400 dark:hover:text-pink-300 font-medium">
             Back to login
           </Link>
         </div>

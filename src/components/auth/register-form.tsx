@@ -76,17 +76,26 @@ export function RegisterForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+        <div className="mb-6">
+          <h2 className="text-xl font-semibold text-center text-gray-800 dark:text-gray-200">
+            Create your account
+          </h2>
+        </div>
         <FormField
           control={form.control}
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Full Name</FormLabel>
+              <FormLabel className="text-gray-700 dark:text-gray-300">Full Name</FormLabel>
               <FormControl>
-                <Input placeholder="Enter your full name" {...field} />
+                <Input 
+                  placeholder="Enter your full name" 
+                  className="border-gray-300 dark:border-gray-700 focus:border-purple-400 dark:focus:border-purple-500 focus:ring-purple-300 dark:focus:ring-purple-700" 
+                  {...field} 
+                />
               </FormControl>
-              <FormMessage />
+              <FormMessage className="text-pink-600 dark:text-pink-400" />
             </FormItem>
           )}
         />
@@ -95,11 +104,16 @@ export function RegisterForm() {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel className="text-gray-700 dark:text-gray-300">Email</FormLabel>
               <FormControl>
-                <Input placeholder="Enter your email" type="email" {...field} />
+                <Input 
+                  placeholder="Enter your email" 
+                  type="email" 
+                  className="border-gray-300 dark:border-gray-700 focus:border-purple-400 dark:focus:border-purple-500 focus:ring-purple-300 dark:focus:ring-purple-700" 
+                  {...field} 
+                />
               </FormControl>
-              <FormMessage />
+              <FormMessage className="text-pink-600 dark:text-pink-400" />
             </FormItem>
           )}
         />
@@ -108,11 +122,19 @@ export function RegisterForm() {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Password</FormLabel>
+              <FormLabel className="text-gray-700 dark:text-gray-300">Password</FormLabel>
               <FormControl>
-                <Input placeholder="Create a password" type="password" {...field} />
+                <Input 
+                  placeholder="Create a password" 
+                  type="password" 
+                  className="border-gray-300 dark:border-gray-700 focus:border-purple-400 dark:focus:border-purple-500 focus:ring-purple-300 dark:focus:ring-purple-700" 
+                  {...field} 
+                />
               </FormControl>
-              <FormMessage />
+              <FormMessage className="text-pink-600 dark:text-pink-400" />
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                Password must be at least 8 characters with uppercase, lowercase, and number
+              </p>
             </FormItem>
           )}
         />
@@ -121,23 +143,34 @@ export function RegisterForm() {
           name="confirmPassword"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Confirm Password</FormLabel>
+              <FormLabel className="text-gray-700 dark:text-gray-300">Confirm Password</FormLabel>
               <FormControl>
-                <Input placeholder="Confirm your password" type="password" {...field} />
+                <Input 
+                  placeholder="Confirm your password" 
+                  type="password" 
+                  className="border-gray-300 dark:border-gray-700 focus:border-purple-400 dark:focus:border-purple-500 focus:ring-purple-300 dark:focus:ring-purple-700" 
+                  {...field} 
+                />
               </FormControl>
-              <FormMessage />
+              <FormMessage className="text-pink-600 dark:text-pink-400" />
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full" disabled={isPending}>
+        <Button 
+          type="submit" 
+          className="w-full bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-300 dark:focus:ring-purple-800 mt-2" 
+          disabled={isPending}
+        >
           {isPending ? "Creating account..." : "Create Account"}
         </Button>
       </form>
-      <div className="mt-4 text-center text-sm">
-        Already have an account?{" "}
-        <Link href="/login" className="text-primary hover:underline">
-          Log in
-        </Link>
+      <div className="mt-6 text-center text-sm">
+        <p className="text-gray-600 dark:text-gray-400">
+          Already have an account?{" "}
+          <Link href="/login" className="text-pink-600 hover:text-pink-700 dark:text-pink-400 dark:hover:text-pink-300 font-medium">
+            Log in
+          </Link>
+        </p>
       </div>
     </Form>
   );

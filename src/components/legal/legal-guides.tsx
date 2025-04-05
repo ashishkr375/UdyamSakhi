@@ -83,18 +83,24 @@ export function LegalGuides({ businessType, state }: LegalGuidesProps) {
 
   return (
     <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-      <TabsList className="grid w-full grid-cols-2">
-        <TabsTrigger value="registration">
-          <ScrollText className="mr-2 h-4 w-4" />
-          Registration Guides
+      <TabsList className="grid w-full grid-cols-2 bg-gray-100 dark:bg-gray-900 p-1">
+        <TabsTrigger 
+          value="registration"
+          className="flex items-center justify-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-pink-400 data-[state=active]:to-purple-400 data-[state=active]:text-white dark:data-[state=active]:text-white"
+        >
+          <ScrollText className="h-4 w-4" />
+          <span>Registration Guides</span>
         </TabsTrigger>
-        <TabsTrigger value="taxation">
-          <FileText className="mr-2 h-4 w-4" />
-          Taxation Guides
+        <TabsTrigger 
+          value="taxation"
+          className="flex items-center justify-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-pink-400 data-[state=active]:to-purple-400 data-[state=active]:text-white dark:data-[state=active]:text-white"
+        >
+          <FileText className="h-4 w-4" />
+          <span>Taxation Guides</span>
         </TabsTrigger>
       </TabsList>
 
-      <TabsContent value="registration">
+      <TabsContent value="registration" className="bg-white dark:bg-gray-800 rounded-xl border border-purple-100 dark:border-purple-900 p-5 shadow-sm">
         <div className="grid gap-4 md:grid-cols-2">
           {registrationGuides.map((guide) => (
             <Card key={guide.id}>
@@ -123,7 +129,7 @@ export function LegalGuides({ businessType, state }: LegalGuidesProps) {
         </div>
       </TabsContent>
 
-      <TabsContent value="taxation">
+      <TabsContent value="taxation" className="bg-white dark:bg-gray-800 rounded-xl border border-purple-100 dark:border-purple-900 p-5 shadow-sm">
         <div className="grid gap-4 md:grid-cols-2">
           {taxationGuides.map((guide) => (
             <Card key={guide.id}>

@@ -89,26 +89,29 @@ How can I assist you today?`,
 
   return (
     <div className="space-y-4">
-      <Alert>
-        <AlertCircle className="h-4 w-4" />
-        <AlertDescription>
+      <Alert className="border-pink-100 dark:border-pink-900 bg-pink-50 dark:bg-pink-900/20">
+        <AlertCircle className="h-4 w-4 text-pink-500 dark:text-pink-400" />
+        <AlertDescription className="text-pink-700 dark:text-pink-300">
           This AI assistant provides general information about legal and compliance
           matters. For specific legal advice, please consult with a qualified legal
           professional.
         </AlertDescription>
       </Alert>
 
-      <Card>
+      <Card className="border-purple-100 dark:border-purple-900 bg-white dark:bg-gray-800 shadow-sm">
         <CardHeader>
-          <CardTitle>AI Legal Assistant</CardTitle>
-          <CardDescription>
+          <CardTitle className="text-gray-900 dark:text-gray-100 flex items-center gap-2">
+            <Bot className="h-5 w-5 text-purple-500 dark:text-purple-400" />
+            AI Legal Assistant
+          </CardTitle>
+          <CardDescription className="text-gray-600 dark:text-gray-400">
             Ask questions about legal requirements and compliance for your business
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <ScrollArea
             ref={scrollAreaRef}
-            className="h-[400px] pr-4"
+            className="h-[400px] pr-4 border border-gray-100 dark:border-gray-700 rounded-md p-4"
           >
             <div className="space-y-4">
               {messages.map((message, index) => (
@@ -121,8 +124,8 @@ How can I assist you today?`,
                   <div
                     className={`w-6 h-6 rounded-full flex items-center justify-center ${
                       message.role === "assistant"
-                        ? "bg-primary text-primary-foreground"
-                        : "bg-muted"
+                        ? "bg-gradient-to-r from-purple-400 to-pink-400 text-white"
+                        : "bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200"
                     }`}
                   >
                     {message.role === "assistant" ? (
@@ -134,11 +137,11 @@ How can I assist you today?`,
                   <div
                     className={`rounded-lg px-4 py-2 max-w-[80%] ${
                       message.role === "assistant"
-                        ? "bg-muted"
-                        : "bg-primary text-primary-foreground"
+                        ? "bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-800 dark:text-gray-200"
+                        : "bg-gradient-to-r from-pink-500 to-purple-500 text-white"
                     }`}
                   >
-                    <div className={`prose ${message.role === "user" ? "dark:prose-invert" : ""} max-w-none`}>
+                    <div className={`prose max-w-none ${message.role === "user" ? "prose-invert" : ""}`}>
                       <ReactMarkdown>{message.content}</ReactMarkdown>
                     </div>
                   </div>
@@ -146,11 +149,15 @@ How can I assist you today?`,
               ))}
               {isLoading && (
                 <div className="flex gap-3">
-                  <div className="w-6 h-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center">
+                  <div className="w-6 h-6 rounded-full bg-gradient-to-r from-purple-400 to-pink-400 text-white flex items-center justify-center">
                     <Bot className="h-4 w-4" />
                   </div>
-                  <div className="bg-muted rounded-lg px-4 py-2">
-                    Thinking...
+                  <div className="bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-2">
+                    <div className="flex space-x-2">
+                      <div className="h-2 w-2 bg-gray-400 dark:bg-gray-600 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+                      <div className="h-2 w-2 bg-gray-400 dark:bg-gray-600 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+                      <div className="h-2 w-2 bg-gray-400 dark:bg-gray-600 rounded-full animate-bounce"></div>
+                    </div>
                   </div>
                 </div>
               )}
@@ -162,9 +169,14 @@ How can I assist you today?`,
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Type your question here..."
-              className="min-h-[80px]"
+              className="min-h-[80px] border-gray-200 dark:border-gray-700 focus:border-pink-500 dark:focus:border-pink-400"
             />
-            <Button type="submit" size="icon" disabled={isLoading}>
+            <Button 
+              type="submit" 
+              size="icon" 
+              disabled={isLoading}
+              className="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white self-end h-[40px] w-[40px]"
+            >
               <Send className="h-4 w-4" />
             </Button>
           </form>

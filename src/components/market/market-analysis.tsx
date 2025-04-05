@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Loader2 } from "lucide-react";
+import { Loader2, BarChart3, Users, Landmark, Lightbulb, AlertTriangle, ListTodo } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -12,6 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "sonner";
+import { Badge } from "@/components/ui/badge";
 
 interface MarketAnalysisProps {
   businessPlans: Array<{
@@ -118,13 +119,14 @@ export function MarketAnalysis({ businessPlans }: MarketAnalysisProps) {
 
   return (
     <div className="space-y-4">
-      <Card>
+      <Card className="border-purple-100 dark:border-purple-900 bg-white dark:bg-gray-800 shadow-sm">
         <CardHeader>
-          <CardTitle>Market Analysis</CardTitle>
+          <CardTitle className="text-gray-900 dark:text-gray-100">Market Analysis</CardTitle>
+          <CardDescription className="text-gray-600 dark:text-gray-400">Analyze your market potential and competitive landscape</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <label className="text-sm font-medium">Select Business Plan</label>
+            <label className="text-sm font-medium text-gray-900 dark:text-gray-100">Select Business Plan</label>
             <Select 
               value={selectedPlan} 
               onValueChange={(value) => {
@@ -133,10 +135,10 @@ export function MarketAnalysis({ businessPlans }: MarketAnalysisProps) {
               }}
               disabled={isGenerating}
             >
-              <SelectTrigger>
+              <SelectTrigger className="border-gray-200 dark:border-gray-700 focus:ring-pink-500 dark:focus:ring-pink-400">
                 <SelectValue placeholder="Choose a business plan" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="border-purple-100 dark:border-purple-900">
                 {businessPlans.map((plan) => (
                   <SelectItem key={plan._id} value={plan._id}>
                     {plan.businessName}
@@ -149,7 +151,7 @@ export function MarketAnalysis({ businessPlans }: MarketAnalysisProps) {
           <Button
             onClick={handleGenerate}
             disabled={isGenerating || loading || !selectedPlan}
-            className="w-full"
+            className="w-full bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white"
           >
             {(isGenerating || loading) && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             {loading ? "Loading Data..." : (isGenerating ? (hasExistingData ? "Regenerating..." : "Generating...") : (hasExistingData ? "Regenerate Analysis" : "Generate Analysis"))}
@@ -160,40 +162,61 @@ export function MarketAnalysis({ businessPlans }: MarketAnalysisProps) {
 
       {/* Display Results */}
       {analysis && (
-        <Card>
+        <Card className="border-purple-100 dark:border-purple-900 bg-white dark:bg-gray-800 shadow-sm">
           <CardHeader>
-            <CardTitle>Analysis Results</CardTitle>
+            <CardTitle className="text-gray-900 dark:text-gray-100">Analysis Results</CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
             {/* Market Size */}
-            <div>
-              <h3 className="font-semibold mb-2">Market Size</h3>
-              <div className="space-y-2 text-sm">
-                <p>Current: {analysis.marketSize?.current || "N/A"}</p>
-                <p>Potential: {analysis.marketSize?.potential || "N/A"}</p>
-                <p>Growth Rate: {analysis.marketSize?.growthRate || "N/A"}</p>
+            <div className="p-4 border border-gray-100 dark:border-gray-700 rounded-lg">
+              <h3 className="font-semibold text-gray-900 dark:text-gray-100 flex items-center gap-2 mb-3">
+                <BarChart3 className="h-5 w-5 text-pink-500 dark:text-pink-400" />
+                Market Size
+              </h3>
+              <div className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+                <p className="flex items-center gap-2">
+                  <Badge className="bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-300">Current</Badge>
+                  {analysis.marketSize?.current || "N/A"}
+                </p>
+                <p className="flex items-center gap-2">
+                  <Badge className="bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300">Potential</Badge> 
+                  {analysis.marketSize?.potential || "N/A"}
+                </p>
+                <p className="flex items-center gap-2">
+                  <Badge className="bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-300">Growth Rate</Badge>
+                  {analysis.marketSize?.growthRate || "N/A"}
+                </p>
               </div>
             </div>
 
             {/* Competitive Landscape */}
-            <div>
-              <h3 className="font-semibold mb-2">Competitive Landscape</h3>
-              <div className="space-y-2 text-sm">
+            <div className="p-4 border border-gray-100 dark:border-gray-700 rounded-lg">
+              <h3 className="font-semibold text-gray-900 dark:text-gray-100 flex items-center gap-2 mb-3">
+                <Users className="h-5 w-5 text-purple-500 dark:text-purple-400" />
+                Competitive Landscape
+              </h3>
+              <div className="space-y-4 text-sm">
                 <div>
-                  <p className="font-medium">Direct Competitors:</p>
-                  <ul className="list-disc pl-5">
+                  <p className="font-medium text-gray-800 dark:text-gray-200 mb-2 flex items-center gap-2">
+                    <Badge className="bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-300">Direct Competitors</Badge>
+                  </p>
+                  <ul className="list-disc pl-5 text-gray-600 dark:text-gray-400">
                     {analysis.competitiveLandscape?.directCompetitors?.map((c: string, i: number) => <li key={i}>{c}</li>) ?? <li>N/A</li>}
                   </ul>
                 </div>
                 <div>
-                  <p className="font-medium">Indirect Competitors:</p>
-                  <ul className="list-disc pl-5">
+                  <p className="font-medium text-gray-800 dark:text-gray-200 mb-2 flex items-center gap-2">
+                    <Badge className="bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300">Indirect Competitors</Badge>
+                  </p>
+                  <ul className="list-disc pl-5 text-gray-600 dark:text-gray-400">
                     {analysis.competitiveLandscape?.indirectCompetitors?.map((c: string, i: number) => <li key={i}>{c}</li>) ?? <li>N/A</li>}
                   </ul>
                 </div>
                 <div>
-                  <p className="font-medium">Competitive Advantages:</p>
-                  <ul className="list-disc pl-5">
+                  <p className="font-medium text-gray-800 dark:text-gray-200 mb-2 flex items-center gap-2">
+                    <Badge className="bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-300">Competitive Advantages</Badge>
+                  </p>
+                  <ul className="list-disc pl-5 text-gray-600 dark:text-gray-400">
                     {analysis.competitiveLandscape?.competitiveAdvantages?.map((a: string, i: number) => <li key={i}>{a}</li>) ?? <li>N/A</li>}
                   </ul>
                 </div>
@@ -201,26 +224,35 @@ export function MarketAnalysis({ businessPlans }: MarketAnalysisProps) {
             </div>
 
             {/* Market Opportunities */}
-            <div>
-              <h3 className="font-semibold mb-2">Market Opportunities</h3>
-              <ul className="list-disc pl-5 text-sm">
-                {analysis.marketOpportunities?.map((o: string, i: number) => <li key={i}>{o}</li>) ?? <li>N/A</li>}
+            <div className="p-4 border border-gray-100 dark:border-gray-700 rounded-lg">
+              <h3 className="font-semibold text-gray-900 dark:text-gray-100 flex items-center gap-2 mb-3">
+                <Lightbulb className="h-5 w-5 text-pink-500 dark:text-pink-400" />
+                Market Opportunities
+              </h3>
+              <ul className="list-disc pl-5 text-sm text-gray-600 dark:text-gray-400">
+                {analysis.marketOpportunities?.map((opp: string, i: number) => <li key={i}>{opp}</li>) ?? <li>N/A</li>}
               </ul>
             </div>
 
             {/* Market Threats */}
-            <div>
-              <h3 className="font-semibold mb-2">Market Threats</h3>
-              <ul className="list-disc pl-5 text-sm">
-                {analysis.marketThreats?.map((t: string, i: number) => <li key={i}>{t}</li>) ?? <li>N/A</li>}
+            <div className="p-4 border border-gray-100 dark:border-gray-700 rounded-lg">
+              <h3 className="font-semibold text-gray-900 dark:text-gray-100 flex items-center gap-2 mb-3">
+                <AlertTriangle className="h-5 w-5 text-purple-500 dark:text-purple-400" />
+                Market Threats
+              </h3>
+              <ul className="list-disc pl-5 text-sm text-gray-600 dark:text-gray-400">
+                {analysis.marketThreats?.map((threat: string, i: number) => <li key={i}>{threat}</li>) ?? <li>N/A</li>}
               </ul>
             </div>
 
             {/* Recommendations */}
-            <div>
-              <h3 className="font-semibold mb-2">Recommendations</h3>
-              <ul className="list-disc pl-5 text-sm">
-                {analysis.recommendations?.map((r: string, i: number) => <li key={i}>{r}</li>) ?? <li>N/A</li>}
+            <div className="p-4 border border-gray-100 dark:border-gray-700 rounded-lg">
+              <h3 className="font-semibold text-gray-900 dark:text-gray-100 flex items-center gap-2 mb-3">
+                <ListTodo className="h-5 w-5 text-pink-500 dark:text-pink-400" />
+                Recommendations
+              </h3>
+              <ul className="list-disc pl-5 text-sm text-gray-600 dark:text-gray-400">
+                {analysis.recommendations?.map((rec: string, i: number) => <li key={i}>{rec}</li>) ?? <li>N/A</li>}
               </ul>
             </div>
           </CardContent>

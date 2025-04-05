@@ -60,17 +60,27 @@ export function LoginForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+        <div className="mb-6">
+          <h2 className="text-xl font-semibold text-center text-gray-800 dark:text-gray-200">
+            Log in to your account
+          </h2>
+        </div>
         <FormField
           control={form.control}
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel className="text-gray-700 dark:text-gray-300">Email</FormLabel>
               <FormControl>
-                <Input placeholder="Enter your email" type="email" {...field} />
+                <Input 
+                  placeholder="Enter your email" 
+                  type="email" 
+                  className="border-gray-300 dark:border-gray-700 focus:border-purple-400 dark:focus:border-purple-500 focus:ring-purple-300 dark:focus:ring-purple-700" 
+                  {...field} 
+                />
               </FormControl>
-              <FormMessage />
+              <FormMessage className="text-pink-600 dark:text-pink-400" />
             </FormItem>
           )}
         />
@@ -79,23 +89,39 @@ export function LoginForm() {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Password</FormLabel>
+              <div className="flex justify-between items-center">
+                <FormLabel className="text-gray-700 dark:text-gray-300">Password</FormLabel>
+                <Link href="/forgot-password" className="text-xs text-pink-600 hover:text-pink-700 dark:text-pink-400 dark:hover:text-pink-300">
+                  Forgot password?
+                </Link>
+              </div>
               <FormControl>
-                <Input placeholder="Enter your password" type="password" {...field} />
+                <Input 
+                  placeholder="Enter your password" 
+                  type="password" 
+                  className="border-gray-300 dark:border-gray-700 focus:border-purple-400 dark:focus:border-purple-500 focus:ring-purple-300 dark:focus:ring-purple-700" 
+                  {...field} 
+                />
               </FormControl>
-              <FormMessage />
+              <FormMessage className="text-pink-600 dark:text-pink-400" />
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full" disabled={isPending}>
+        <Button 
+          type="submit" 
+          className="w-full bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-300 dark:focus:ring-purple-800" 
+          disabled={isPending}
+        >
           {isPending ? "Logging in..." : "Log In"}
         </Button>
       </form>
-      <div className="mt-4 text-center text-sm">
-        Don't have an account?{" "}
-        <Link href="/register" className="text-primary hover:underline">
-          Create one
-        </Link>
+      <div className="mt-6 text-center text-sm">
+        <p className="text-gray-600 dark:text-gray-400">
+          Don't have an account?{" "}
+          <Link href="/register" className="text-pink-600 hover:text-pink-700 dark:text-pink-400 dark:hover:text-pink-300 font-medium">
+            Create one
+          </Link>
+        </p>
       </div>
     </Form>
   );

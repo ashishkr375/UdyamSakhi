@@ -7,6 +7,15 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Progress } from "@/components/ui/progress";
 import { User } from "@/models/User";
 import connectDB from "@/lib/mongodb";
+import { 
+  UserCircle, 
+  FileText, 
+  PiggyBank, 
+  ChevronRight, 
+  CheckCircle2, 
+  Circle, 
+  Info
+} from "lucide-react";
 
 interface DashboardData {
   user: {
@@ -120,81 +129,135 @@ export default async function DashboardPage() {
     const data = await getDashboardData(session.user.email);
 
     return (
-      <div className="container mx-auto py-8">
+      <div className="container mx-auto py-8 px-4">
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {/* Welcome Card */}
-          <Card className="p-6 col-span-full">
-            <div className="flex items-center gap-4">
-              <Avatar className="h-16 w-16">
+          <Card className="p-6 col-span-full border-purple-100 dark:border-purple-900 bg-white dark:bg-gray-800 shadow-sm">
+            <div className="flex flex-col md:flex-row md:items-center gap-4">
+              <Avatar className="h-16 w-16 border-2 border-pink-200 dark:border-pink-800">
                 <AvatarImage src={data.user.avatar?.url} />
-                <AvatarFallback>{data.user.name[0]}</AvatarFallback>
+                <AvatarFallback className="bg-gradient-to-r from-pink-400 to-purple-400 text-white">
+                  {data.user.name[0]}
+                </AvatarFallback>
               </Avatar>
               <div className="flex-1">
-                <h1 className="text-2xl font-bold">Welcome back, {data.user.name}!</h1>
-                <p className="text-muted-foreground">
-                  {data.businessProfile?.businessName || "Complete your business profile"}
+                <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                  Welcome back, {data.user.name}!
+                </h1>
+                <p className="text-gray-600 dark:text-gray-400">
+                  {data.businessProfile?.businessName || "Complete your business profile to get started"}
                 </p>
-                <div className="mt-2">
+                <div className="mt-3">
                   <div className="flex justify-between text-sm mb-1">
-                    <span>Profile Completion</span>
-                    <span>{data.stats.profileCompletion}%</span>
+                    <span className="text-gray-700 dark:text-gray-300 font-medium">Profile Completion</span>
+                    <span className="text-pink-600 dark:text-pink-400 font-semibold">{data.stats.profileCompletion}%</span>
                   </div>
-                  <Progress value={data.stats.profileCompletion} className="h-2" />
+                  <Progress 
+                    value={data.stats.profileCompletion} 
+                    className="h-2 bg-gray-100 dark:bg-gray-700" 
+                    indicatorClassName="bg-gradient-to-r from-pink-500 to-purple-500"
+                  />
                 </div>
               </div>
             </div>
           </Card>
 
           {/* Quick Actions Card */}
-          <Card className="p-6">
-            <h2 className="text-xl font-semibold mb-4">Quick Actions</h2>
+          <Card className="p-6 border-purple-100 dark:border-purple-900 bg-white dark:bg-gray-800 shadow-sm">
+            <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">Quick Actions</h2>
             <div className="space-y-2">
-              <Button className="w-full justify-start" variant="outline" asChild>
-                <a href="/my-profile">Complete Profile</a>
+              <Button 
+                className="w-full justify-between group hover:bg-pink-50 dark:hover:bg-pink-900/20 text-gray-700 dark:text-gray-300 border-gray-200 dark:border-gray-700" 
+                variant="outline" 
+                asChild
+              >
+                <a href="/my-profile" className="flex items-center">
+                  <div className="flex items-center">
+                    <UserCircle className="h-4 w-4 mr-2 text-pink-500 dark:text-pink-400" />
+                    <span>Complete Profile</span>
+                  </div>
+                  <ChevronRight className="h-4 w-4 text-gray-400 dark:text-gray-600 group-hover:text-pink-500 dark:group-hover:text-pink-400 transition-colors" />
+                </a>
               </Button>
-              <Button className="w-full justify-start" variant="outline" asChild>
-                <a href="/my-business-plan">Create Business Plan</a>
+              <Button 
+                className="w-full justify-between group hover:bg-purple-50 dark:hover:bg-purple-900/20 text-gray-700 dark:text-gray-300 border-gray-200 dark:border-gray-700" 
+                variant="outline" 
+                asChild
+              >
+                <a href="/my-business-plan" className="flex items-center">
+                  <div className="flex items-center">
+                    <FileText className="h-4 w-4 mr-2 text-purple-500 dark:text-purple-400" />
+                    <span>Create Business Plan</span>
+                  </div>
+                  <ChevronRight className="h-4 w-4 text-gray-400 dark:text-gray-600 group-hover:text-purple-500 dark:group-hover:text-purple-400 transition-colors" />
+                </a>
               </Button>
-              <Button className="w-full justify-start" variant="outline" asChild>
-                <a href="/funding-navigator">Explore Funding</a>
+              <Button 
+                className="w-full justify-between group hover:bg-pink-50 dark:hover:bg-pink-900/20 text-gray-700 dark:text-gray-300 border-gray-200 dark:border-gray-700" 
+                variant="outline" 
+                asChild
+              >
+                <a href="/funding-navigator" className="flex items-center">
+                  <div className="flex items-center">
+                    <PiggyBank className="h-4 w-4 mr-2 text-pink-500 dark:text-pink-400" />
+                    <span>Explore Funding</span>
+                  </div>
+                  <ChevronRight className="h-4 w-4 text-gray-400 dark:text-gray-600 group-hover:text-pink-500 dark:group-hover:text-pink-400 transition-colors" />
+                </a>
               </Button>
             </div>
           </Card>
 
           {/* Business Status Card */}
-          <Card className="p-6">
-            <h2 className="text-xl font-semibold mb-4">Business Status</h2>
+          <Card className="p-6 border-purple-100 dark:border-purple-900 bg-white dark:bg-gray-800 shadow-sm">
+            <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">Business Status</h2>
             <div className="space-y-4">
               <div>
-                <p className="text-sm text-muted-foreground">Industry</p>
-                <p className="font-medium">{data.businessProfile?.industry || "Not specified"}</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Industry</p>
+                <p className="font-medium text-gray-800 dark:text-gray-200">{data.businessProfile?.industry || "Not specified"}</p>
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Stage</p>
-                <p className="font-medium">{data.businessProfile?.stage || "Not specified"}</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Stage</p>
+                <p className="font-medium text-gray-800 dark:text-gray-200">{data.businessProfile?.stage || "Not specified"}</p>
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Business Type</p>
-                <p className="font-medium">{data.businessProfile?.type || "Not specified"}</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Business Type</p>
+                <p className="font-medium text-gray-800 dark:text-gray-200">{data.businessProfile?.type || "Not specified"}</p>
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Documents</p>
-                <p className="font-medium">{data.stats.documentsCount} uploaded</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Documents</p>
+                <p className="font-medium text-gray-800 dark:text-gray-200">
+                  {data.stats.documentsCount 
+                    ? <span className="flex items-center"><CheckCircle2 className="h-4 w-4 mr-1 text-green-500" /> {data.stats.documentsCount} uploaded</span>
+                    : <span className="flex items-center"><Circle className="h-4 w-4 mr-1 text-gray-400" /> None uploaded</span>
+                  }
+                </p>
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Business Plan</p>
-                <p className="font-medium">{data.stats.hasBusinesPlan ? "Created" : "Not created"}</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Business Plan</p>
+                <p className="font-medium text-gray-800 dark:text-gray-200">
+                  {data.stats.hasBusinesPlan 
+                    ? <span className="flex items-center"><CheckCircle2 className="h-4 w-4 mr-1 text-green-500" /> Created</span>
+                    : <span className="flex items-center"><Circle className="h-4 w-4 mr-1 text-gray-400" /> Not created</span>
+                  }
+                </p>
               </div>
             </div>
           </Card>
 
           {/* Next Steps Card */}
-          <Card className="p-6">
-            <h2 className="text-xl font-semibold mb-4">Recommended Next Steps</h2>
-            <ul className="space-y-2">
+          <Card className="p-6 border-purple-100 dark:border-purple-900 bg-white dark:bg-gray-800 shadow-sm">
+            <div className="flex items-center gap-2 mb-4">
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Recommended Next Steps</h2>
+              <Info className="h-4 w-4 text-gray-400 dark:text-gray-500" />
+            </div>
+            <ul className="space-y-3">
               {data.recommendations.map((recommendation, index) => (
-                <li key={index} className="flex items-center gap-2 text-muted-foreground">
-                  • {recommendation}
+                <li key={index} className="flex items-start gap-2 text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-900/50 p-2.5 rounded-md">
+                  <span className="w-5 h-5 mt-0.5 rounded-full bg-gradient-to-r from-pink-500 to-purple-500 text-white flex items-center justify-center text-xs font-medium flex-shrink-0">
+                    {index + 1}
+                  </span>
+                  <span>{recommendation}</span>
                 </li>
               ))}
             </ul>

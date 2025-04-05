@@ -32,6 +32,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useRouter } from "next/navigation";
+import { FileText, RefreshCw, Calendar, Trash2, Download, Share2, BarChart, Target, SlidersHorizontal, LineChart } from "lucide-react";
 
 interface BusinessPlanViewProps {
   plan: IBusinessPlan;
@@ -39,18 +40,18 @@ interface BusinessPlanViewProps {
 
 // Add this CSS to your global styles or component
 const markdownStyles = {
-  heading1: "text-3xl font-bold mt-8 mb-6",
-  heading2: "text-2xl font-semibold mt-6 mb-4",
-  heading3: "text-xl font-medium mt-4 mb-3",
-  paragraph: "text-base leading-7 mb-4",
-  table: "w-full border-collapse border border-border mb-6",
-  tableHeader: "bg-muted px-4 py-2 border border-border font-medium",
-  tableCell: "px-4 py-2 border border-border",
-  list: "list-disc list-inside mb-4 space-y-2",
-  orderedList: "list-decimal list-inside mb-4 space-y-2",
-  blockquote: "border-l-4 border-primary pl-4 italic my-4",
-  code: "bg-muted rounded px-1 py-0.5 font-mono text-sm",
-  codeBlock: "bg-muted p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto",
+  heading1: "text-3xl font-bold mt-8 mb-6 text-gray-900 dark:text-gray-100",
+  heading2: "text-2xl font-semibold mt-6 mb-4 text-gray-900 dark:text-gray-100",
+  heading3: "text-xl font-medium mt-4 mb-3 text-gray-900 dark:text-gray-100",
+  paragraph: "text-base leading-7 mb-4 text-gray-700 dark:text-gray-300",
+  table: "w-full border-collapse border-0 mb-0",
+  tableHeader: "bg-purple-50 dark:bg-purple-900/20 px-4 py-2 border border-purple-100 dark:border-purple-900 font-medium text-gray-800 dark:text-gray-200 text-left",
+  tableCell: "px-4 py-2 border border-purple-100 dark:border-purple-900 text-gray-700 dark:text-gray-300",
+  list: "list-disc list-inside mb-4 space-y-2 text-gray-700 dark:text-gray-300",
+  orderedList: "list-decimal list-inside mb-4 space-y-2 text-gray-700 dark:text-gray-300",
+  blockquote: "border-l-4 border-pink-400 dark:border-pink-500 pl-4 italic my-4 text-gray-600 dark:text-gray-400",
+  code: "bg-gray-100 dark:bg-gray-800 rounded px-1 py-0.5 font-mono text-sm text-pink-600 dark:text-pink-400",
+  codeBlock: "bg-gray-100 dark:bg-gray-800 p-4 rounded-lg font-mono text-sm mb-4 overflow-x-auto text-gray-800 dark:text-gray-200",
 };
 
 export function BusinessPlanView({ plan }: BusinessPlanViewProps) {
@@ -84,11 +85,15 @@ export function BusinessPlanView({ plan }: BusinessPlanViewProps) {
       }
     );
 
-    // Add extra newline before lists
-    processedContent = processedContent.replace(/^([*-]|\d+\.) /gm, '\n$&');
+    // Remove extra newlines before lists to prevent double bullets
+    processedContent = processedContent.replace(/\n\n([*-]|\d+\.) /gm, '\n$1 ');
 
-    // Add extra newline before tables
-    processedContent = processedContent.replace(/^\|/gm, '\n|');
+    // Better table handling - preserve table structure without adding extra lines
+    // This regex matches table blocks and ensures proper spacing around them
+    processedContent = processedContent.replace(
+      /(\n\s*\|[\s\S]*?\|.*\n)(\s*[^\|])/g, 
+      '$1\n$2'
+    );
 
     // Add extra newline before blockquotes
     processedContent = processedContent.replace(/^>/gm, '\n>');
@@ -151,44 +156,58 @@ export function BusinessPlanView({ plan }: BusinessPlanViewProps) {
   return (
     <>
       {isGenerating && (
-        <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center">
-          <div className="bg-card p-6 rounded-lg shadow-lg max-w-md text-center space-y-4">
-            <h3 className="text-xl font-semibold">Generating Business Plan</h3>
-            <p className="text-muted-foreground">
+        <div className="fixed inset-0 bg-gray-900/80 backdrop-blur-sm z-50 flex items-center justify-center">
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg max-w-md text-center space-y-4">
+            <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Generating Business Plan</h3>
+            <p className="text-gray-600 dark:text-gray-400">
               Customizing your business plan section. This may take 2-3 minutes depending on your internet speed.
             </p>
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-pink-500 dark:border-pink-400 mx-auto"></div>
           </div>
         </div>
       )}
 
       <div className="space-y-6">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 bg-white dark:bg-gray-800 rounded-xl border border-purple-100 dark:border-purple-900 shadow-sm">
           <div>
-            <h2 className="text-2xl font-bold">{plan.businessName}</h2>
-            <p className="text-muted-foreground">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-2">
+              <FileText className="h-6 w-6 text-pink-600 dark:text-pink-400" />
+              {plan.businessName}
+            </h2>
+            <p className="text-gray-600 dark:text-gray-400 flex items-center gap-1 mt-1">
+              <Calendar className="h-4 w-4" />
               Created on {formatDate(plan.createdAt)}
             </p>
           </div>
           <div className="flex items-center gap-4">
-            <Badge variant={plan.status === "final" ? "default" : "secondary"}>
+            <Badge className={`${
+              plan.status === "final" 
+                ? "bg-gradient-to-r from-pink-500 to-purple-500" 
+                : "bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200"
+            } px-3 py-1 rounded-full text-xs font-medium`}>
               {plan.status.charAt(0).toUpperCase() + plan.status.slice(1)}
             </Badge>
             <AlertDialog>
               <AlertDialogTrigger asChild>
-                <Button variant="destructive" size="sm">Delete Plan</Button>
+                <Button variant="destructive" size="sm" className="flex items-center gap-1">
+                  <Trash2 className="h-4 w-4" />
+                  Delete Plan
+                </Button>
               </AlertDialogTrigger>
-              <AlertDialogContent>
+              <AlertDialogContent className="border-purple-100 dark:border-purple-900 bg-white dark:bg-gray-800">
                 <AlertDialogHeader>
-                  <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                  <AlertDialogDescription>
+                  <AlertDialogTitle className="text-gray-900 dark:text-gray-100">Are you sure?</AlertDialogTitle>
+                  <AlertDialogDescription className="text-gray-600 dark:text-gray-400">
                     This action cannot be undone. This will permanently delete your
                     business plan and remove all of its data.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction onClick={handleDeletePlan}>
+                  <AlertDialogCancel className="border-gray-200 dark:border-gray-700 text-gray-800 dark:text-gray-200">Cancel</AlertDialogCancel>
+                  <AlertDialogAction 
+                    onClick={handleDeletePlan}
+                    className="bg-red-500 hover:bg-red-600 text-white"
+                  >
                     Delete
                   </AlertDialogAction>
                 </AlertDialogFooter>
@@ -197,42 +216,81 @@ export function BusinessPlanView({ plan }: BusinessPlanViewProps) {
           </div>
         </div>
 
-        <Card>
+        <Card className="border-purple-100 dark:border-purple-900 bg-white dark:bg-gray-800 shadow-sm">
           <CardHeader>
-            <CardTitle>Business Overview</CardTitle>
-            <CardDescription>Key information about your business</CardDescription>
+            <CardTitle className="text-gray-900 dark:text-gray-100 flex items-center gap-2">
+              <Target className="h-5 w-5 text-pink-600 dark:text-pink-400" />
+              Business Overview
+            </CardTitle>
+            <CardDescription className="text-gray-600 dark:text-gray-400">Key information about your business</CardDescription>
           </CardHeader>
           <CardContent className="grid gap-4 md:grid-cols-2">
             <div>
-              <p className="text-sm font-medium">Industry</p>
-              <p className="text-sm text-muted-foreground">{plan.industry}</p>
+              <p className="text-sm font-medium text-gray-800 dark:text-gray-200">Industry</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400">{plan.industry}</p>
             </div>
             <div>
-              <p className="text-sm font-medium">Target Market</p>
-              <p className="text-sm text-muted-foreground">{plan.targetMarket}</p>
+              <p className="text-sm font-medium text-gray-800 dark:text-gray-200">Target Market</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400">{plan.targetMarket}</p>
             </div>
           </CardContent>
         </Card>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-5">
-            <TabsTrigger value="executiveSummary">Summary</TabsTrigger>
-            <TabsTrigger value="marketAnalysis">Market</TabsTrigger>
-            <TabsTrigger value="operations">Operations</TabsTrigger>
-            <TabsTrigger value="marketing">Marketing</TabsTrigger>
-            <TabsTrigger value="financialProjections">Finance</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-5 bg-gray-100 dark:bg-gray-900 p-1 rounded-lg overflow-x-auto h-auto">
+            <TabsTrigger 
+              value="executiveSummary" 
+              className="flex flex-col sm:flex-row items-center justify-center sm:gap-2 px-1 py-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-pink-400 data-[state=active]:to-purple-400 data-[state=active]:text-white dark:data-[state=active]:text-white"
+            >
+              <FileText className="h-4 w-4 flex-shrink-0" />
+              <span className="text-[10px] sm:text-sm font-medium">Summary</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="marketAnalysis" 
+              className="flex flex-col sm:flex-row items-center justify-center sm:gap-2 px-1 py-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-pink-400 data-[state=active]:to-purple-400 data-[state=active]:text-white dark:data-[state=active]:text-white"
+            >
+              <BarChart className="h-4 w-4 flex-shrink-0" />
+              <span className="text-[10px] sm:text-sm font-medium">Market</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="operations" 
+              className="flex flex-col sm:flex-row items-center justify-center sm:gap-2 px-1 py-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-pink-400 data-[state=active]:to-purple-400 data-[state=active]:text-white dark:data-[state=active]:text-white"
+            >
+              <SlidersHorizontal className="h-4 w-4 flex-shrink-0" />
+              <span className="text-[10px] sm:text-sm font-medium">Operations</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="marketing" 
+              className="flex flex-col sm:flex-row items-center justify-center sm:gap-2 px-1 py-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-pink-400 data-[state=active]:to-purple-400 data-[state=active]:text-white dark:data-[state=active]:text-white"
+            >
+              <Target className="h-4 w-4 flex-shrink-0" />
+              <span className="text-[10px] sm:text-sm font-medium">Marketing</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="financialProjections" 
+              className="flex flex-col sm:flex-row items-center justify-center sm:gap-2 px-1 py-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-pink-400 data-[state=active]:to-purple-400 data-[state=active]:text-white dark:data-[state=active]:text-white"
+            >
+              <LineChart className="h-4 w-4 flex-shrink-0" />
+              <span className="text-[10px] sm:text-sm font-medium">Finance</span>
+            </TabsTrigger>
           </TabsList>
 
           {Object.entries(plan.sections).map(([key, section]) => (
             <TabsContent key={key} value={key} className="space-y-4">
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 bg-white dark:bg-gray-800 p-4 rounded-xl border border-purple-100 dark:border-purple-900 shadow-sm">
                 <div>
-                  <h3 className="text-lg font-semibold">
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 flex items-center gap-2">
+                    {key === "executiveSummary" && <FileText className="h-5 w-5 text-pink-600 dark:text-pink-400" />}
+                    {key === "marketAnalysis" && <BarChart className="h-5 w-5 text-pink-600 dark:text-pink-400" />}
+                    {key === "operations" && <SlidersHorizontal className="h-5 w-5 text-pink-600 dark:text-pink-400" />}
+                    {key === "marketing" && <Target className="h-5 w-5 text-pink-600 dark:text-pink-400" />}
+                    {key === "financialProjections" && <LineChart className="h-5 w-5 text-pink-600 dark:text-pink-400" />}
                     {key
                       .replace(/([A-Z])/g, " $1")
                       .replace(/^./, (str) => str.toUpperCase())}
                   </h3>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-sm text-gray-600 dark:text-gray-400 flex items-center gap-1 mt-1">
+                    <Calendar className="h-3.5 w-3.5" />
                     Last updated: {formatDate(section.lastUpdated)}
                   </p>
                 </div>
@@ -241,11 +299,13 @@ export function BusinessPlanView({ plan }: BusinessPlanViewProps) {
                   size="sm"
                   onClick={() => handleRegenerateSection(key)}
                   disabled={isPending}
+                  className="border-gray-200 dark:border-gray-700 text-pink-600 dark:text-pink-400 hover:bg-pink-50 dark:hover:bg-pink-900/20 flex items-center gap-1"
                 >
+                  <RefreshCw className="h-3.5 w-3.5" />
                   Regenerate
                 </Button>
               </div>
-              <Card>
+              <Card className="border-purple-100 dark:border-purple-900 bg-white dark:bg-gray-800 shadow-sm">
                 <CardContent className="pt-6">
                   <div className="prose prose-stone dark:prose-invert max-w-none prose-headings:mb-4 prose-p:mb-4 prose-table:border prose-td:border prose-th:border prose-th:p-2 prose-td:p-2">
                     <ReactMarkdown 
@@ -264,7 +324,7 @@ export function BusinessPlanView({ plan }: BusinessPlanViewProps) {
                           <p className={markdownStyles.paragraph} {...props} />
                         ),
                         table: ({node, ...props}) => (
-                          <div className="overflow-x-auto">
+                          <div className="overflow-x-auto my-6 rounded-md border border-purple-100 dark:border-purple-900">
                             <table className={markdownStyles.table} {...props} />
                           </div>
                         ),
@@ -310,14 +370,22 @@ export function BusinessPlanView({ plan }: BusinessPlanViewProps) {
         </Tabs>
 
         <div className="flex justify-end space-x-4">
-          <Button variant="outline">Download PDF</Button>
+          <Button 
+            variant="outline" 
+            className="border-gray-200 dark:border-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800/60 flex items-center gap-1"
+          >
+            <Download className="h-4 w-4" />
+            Download PDF
+          </Button>
           <Button
             onClick={() =>
               toast.message(
                 "This feature will be available in the next update!"
               )
             }
+            className="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white flex items-center gap-1"
           >
+            <Share2 className="h-4 w-4" />
             Share Plan
           </Button>
         </div>

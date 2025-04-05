@@ -5,6 +5,7 @@ import { ComplianceItem } from "@/models/ComplianceItem";
 import connectDB from "@/lib/mongodb";
 import { LegalTaxHub } from "@/components/legal/legal-tax-hub";
 import { User } from "@/models/User";
+import { Scale } from "lucide-react";
 
 async function getComplianceItems(businessType: string, state: string) {
   await connectDB();
@@ -64,13 +65,23 @@ export default async function LegalTaxHubPage() {
   const complianceItems = await getComplianceItems(businessType, state);
 
   return (
-    <div className="container mx-auto py-8">
-      <h1 className="text-3xl font-bold mb-8">Legal & Tax Hub</h1>
-      <LegalTaxHub
-        complianceItems={JSON.parse(JSON.stringify(complianceItems))}
-        businessType={businessType}
-        state={state}
-      />
+    <div className="container mx-auto py-8 px-4">
+      <div className="mb-8">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-2">
+          <Scale className="h-6 w-6 text-pink-600 dark:text-pink-400" />
+          Legal & Tax Hub
+        </h1>
+        <p className="text-gray-600 dark:text-gray-400 mt-1">
+          Manage your compliance requirements and access legal resources
+        </p>
+      </div>
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-purple-100 dark:border-purple-900 p-6">
+        <LegalTaxHub
+          complianceItems={JSON.parse(JSON.stringify(complianceItems))}
+          businessType={businessType}
+          state={state}
+        />
+      </div>
     </div>
   );
 } 

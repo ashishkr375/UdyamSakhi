@@ -7,6 +7,7 @@ import { MarketAnalysis } from "./market-analysis";
 import { GrowthStrategies } from "./growth-strategies";
 import type { IBusinessPlan } from "@/models/BusinessPlan";
 import type { IMarketPlace } from "@/models/MarketPlace";
+import { Store, BarChart3, TrendingUp } from "lucide-react";
 
 interface BusinessPlan {
   _id: string;
@@ -50,23 +51,39 @@ export function MarketAccess({ businessPlans = [] }: MarketAccessProps) {
       onValueChange={setActiveTab}
       className="space-y-4"
     >
-      <TabsList className="grid w-full grid-cols-3">
-        <TabsTrigger value="recommendations">
-          Marketplace Recommendations
+      <TabsList className="grid w-full grid-cols-3 bg-gray-100 dark:bg-gray-900 p-1 rounded-lg overflow-x-auto h-auto">
+        <TabsTrigger 
+          value="recommendations"
+          className="flex flex-col sm:flex-row items-center justify-center sm:gap-2 px-1 py-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-pink-400 data-[state=active]:to-purple-400 data-[state=active]:text-white dark:data-[state=active]:text-white"
+        >
+          <Store className="h-4 w-4 flex-shrink-0" />
+          <span className="text-xs sm:text-sm font-medium">Marketplace</span>
         </TabsTrigger>
-        <TabsTrigger value="analysis">Market Analysis</TabsTrigger>
-        <TabsTrigger value="strategies">Growth Strategies</TabsTrigger>
+        <TabsTrigger 
+          value="analysis"
+          className="flex flex-col sm:flex-row items-center justify-center sm:gap-2 px-1 py-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-pink-400 data-[state=active]:to-purple-400 data-[state=active]:text-white dark:data-[state=active]:text-white"
+        >
+          <BarChart3 className="h-4 w-4 flex-shrink-0" />
+          <span className="text-xs sm:text-sm font-medium">Analysis</span>
+        </TabsTrigger>
+        <TabsTrigger 
+          value="strategies"
+          className="flex flex-col sm:flex-row items-center justify-center sm:gap-2 px-1 py-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-pink-400 data-[state=active]:to-purple-400 data-[state=active]:text-white dark:data-[state=active]:text-white"
+        >
+          <TrendingUp className="h-4 w-4 flex-shrink-0" />
+          <span className="text-xs sm:text-sm font-medium">Growth</span>
+        </TabsTrigger>
       </TabsList>
 
-      <TabsContent value="recommendations" className="space-y-4">
+      <TabsContent value="recommendations" className="space-y-4 pt-4">
         <MarketplaceRecommendations businessPlans={businessPlans} />
       </TabsContent>
 
-      <TabsContent value="analysis" className="space-y-4">
+      <TabsContent value="analysis" className="space-y-4 pt-4">
         <MarketAnalysis businessPlans={businessPlans} />
       </TabsContent>
 
-      <TabsContent value="strategies" className="space-y-4">
+      <TabsContent value="strategies" className="space-y-4 pt-4">
         <GrowthStrategies businessPlans={businessPlans} />
       </TabsContent>
     </Tabs>

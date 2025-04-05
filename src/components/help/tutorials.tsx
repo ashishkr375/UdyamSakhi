@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Search, PlayCircle, FileText, ExternalLink } from 'lucide-react';
+import { Search, PlayCircle, FileText, ExternalLink, BookOpen, Film } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -18,6 +18,9 @@ interface Tutorial {
   category: string;
   tags: string[];
 }
+
+// Define the tab type for type safety
+type TutorialTab = 'all' | 'video' | 'article';
 
 const TUTORIAL_DATA: Tutorial[] = [
   {
@@ -65,7 +68,7 @@ const TUTORIAL_DATA: Tutorial[] = [
 
 export function Tutorials() {
   const [searchQuery, setSearchQuery] = useState('');
-  const [activeTab, setActiveTab] = useState<'all' | 'video' | 'article'>('all');
+  const [activeTab, setActiveTab] = useState<TutorialTab>('all');
 
   const filteredTutorials = TUTORIAL_DATA.filter(tutorial => {
     const matchesSearch = 
@@ -81,55 +84,79 @@ export function Tutorials() {
     <div className="space-y-6">
       <div className="flex flex-col gap-4 md:flex-row md:items-center">
         <div className="relative flex-1">
-          <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+          <Search className="absolute left-2 top-2.5 h-4 w-4 text-gray-500 dark:text-gray-400" />
           <Input
             placeholder="Search tutorials..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-8"
+            className="pl-8 border-gray-200 dark:border-gray-700 focus:border-pink-500 dark:focus:border-pink-400"
           />
         </div>
       </div>
 
-      <Tabs value={activeTab} onValueChange={(value: 'all' | 'video' | 'article') => setActiveTab(value)}>
-        <TabsList>
-          <TabsTrigger value="all">All Tutorials</TabsTrigger>
-          <TabsTrigger value="video">Video Tutorials</TabsTrigger>
-          <TabsTrigger value="article">Text Guides</TabsTrigger>
+      <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as TutorialTab)}>
+        <TabsList className="grid grid-cols-3 bg-gray-100 dark:bg-gray-900 p-1 rounded-lg h-auto">
+          <TabsTrigger 
+            value="all"
+            className="flex flex-col sm:flex-row items-center justify-center sm:gap-2 px-1 py-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-pink-400 data-[state=active]:to-purple-400 data-[state=active]:text-white dark:data-[state=active]:text-white"
+          >
+            <BookOpen className="h-4 w-4 flex-shrink-0" />
+            <span className="text-xs sm:text-sm font-medium">All</span>
+          </TabsTrigger>
+          <TabsTrigger 
+            value="video"
+            className="flex flex-col sm:flex-row items-center justify-center sm:gap-2 px-1 py-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-pink-400 data-[state=active]:to-purple-400 data-[state=active]:text-white dark:data-[state=active]:text-white"
+          >
+            <Film className="h-4 w-4 flex-shrink-0" />
+            <span className="text-xs sm:text-sm font-medium">Videos</span>
+          </TabsTrigger>
+          <TabsTrigger 
+            value="article"
+            className="flex flex-col sm:flex-row items-center justify-center sm:gap-2 px-1 py-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-pink-400 data-[state=active]:to-purple-400 data-[state=active]:text-white dark:data-[state=active]:text-white"
+          >
+            <FileText className="h-4 w-4 flex-shrink-0" />
+            <span className="text-xs sm:text-sm font-medium">Guides</span>
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value={activeTab} className="mt-6">
           <div className="grid gap-6 md:grid-cols-2">
             {filteredTutorials.map((tutorial) => (
-              <Card key={tutorial.id}>
+              <Card key={tutorial.id} className="border-purple-100 dark:border-purple-900 bg-white dark:bg-gray-800 shadow-sm hover:shadow-md transition-shadow duration-200">
                 <CardHeader>
                   <div className="flex items-start justify-between">
                     <div className="flex items-center gap-4">
-                      <div className="rounded-lg bg-primary/10 p-2 text-primary">
+                      <div className="rounded-lg bg-gradient-to-r from-pink-100 to-purple-100 dark:from-pink-900/20 dark:to-purple-900/20 p-2">
                         {tutorial.type === 'video' ? (
-                          <PlayCircle className="h-6 w-6" />
+                          <PlayCircle className="h-6 w-6 text-pink-500 dark:text-pink-400" />
                         ) : (
-                          <FileText className="h-6 w-6" />
+                          <FileText className="h-6 w-6 text-purple-500 dark:text-purple-400" />
                         )}
                       </div>
                       <div>
-                        <CardTitle className="text-lg">{tutorial.title}</CardTitle>
-                        <CardDescription>{tutorial.description}</CardDescription>
+                        <CardTitle className="text-lg text-gray-900 dark:text-gray-100">{tutorial.title}</CardTitle>
+                        <CardDescription className="text-gray-600 dark:text-gray-400">{tutorial.description}</CardDescription>
                       </div>
                     </div>
                   </div>
                 </CardHeader>
                 <CardContent>
                   <div className="flex flex-wrap gap-2 mb-4">
-                    <Badge variant="secondary">{tutorial.category}</Badge>
-                    <Badge variant="outline">{tutorial.duration}</Badge>
+                    <Badge className="bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-300 hover:bg-pink-100 dark:hover:bg-pink-900/30">
+                      {tutorial.category}
+                    </Badge>
+                    <Badge className="bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 hover:bg-purple-100 dark:hover:bg-purple-900/30">
+                      {tutorial.duration}
+                    </Badge>
                     {tutorial.tags.map((tag) => (
-                      <Badge key={tag} variant="outline">{tag}</Badge>
+                      <Badge key={tag} className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700">
+                        {tag}
+                      </Badge>
                     ))}
                   </div>
                   <Button
                     variant="default"
-                    className="w-full"
+                    className="w-full bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white"
                     onClick={() => window.open(tutorial.url, '_blank')}
                   >
                     <ExternalLink className="h-4 w-4 mr-2" />

@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
+import { Suspense } from "react";
 
 const formSchema = z
   .object({
@@ -34,7 +35,7 @@ const formSchema = z
     path: ["confirmPassword"],
   });
 
-export function ResetPasswordForm() {
+function ResetPasswordFormContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
@@ -81,8 +82,11 @@ export function ResetPasswordForm() {
   if (!token) {
     return (
       <div className="text-center space-y-4">
-        <p className="text-muted-foreground">Invalid or expired reset token.</p>
-        <Button asChild>
+        <p className="text-gray-600 dark:text-gray-400">Invalid or expired reset token.</p>
+        <Button 
+          asChild
+          className="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-300 dark:focus:ring-purple-800"
+        >
           <Link href="/forgot-password">Request New Reset Link</Link>
         </Button>
       </div>
@@ -91,10 +95,12 @@ export function ResetPasswordForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        <div className="space-y-2 text-center">
-          <h1 className="text-2xl font-semibold tracking-tight">Reset Password</h1>
-          <p className="text-sm text-muted-foreground">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+        <div className="space-y-3 text-center mb-4">
+          <h1 className="text-2xl font-semibold tracking-tight text-gray-800 dark:text-gray-200">
+            Reset Password
+          </h1>
+          <p className="text-sm text-gray-600 dark:text-gray-400">
             Enter your new password below.
           </p>
         </div>
@@ -103,11 +109,19 @@ export function ResetPasswordForm() {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>New Password</FormLabel>
+              <FormLabel className="text-gray-700 dark:text-gray-300">New Password</FormLabel>
               <FormControl>
-                <Input placeholder="Enter new password" type="password" {...field} />
+                <Input 
+                  placeholder="Enter new password" 
+                  type="password" 
+                  className="border-gray-300 dark:border-gray-700 focus:border-purple-400 dark:focus:border-purple-500 focus:ring-purple-300 dark:focus:ring-purple-700" 
+                  {...field} 
+                />
               </FormControl>
-              <FormMessage />
+              <FormMessage className="text-pink-600 dark:text-pink-400" />
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                Password must be at least 8 characters with uppercase, lowercase, and number
+              </p>
             </FormItem>
           )}
         />
@@ -116,18 +130,44 @@ export function ResetPasswordForm() {
           name="confirmPassword"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Confirm New Password</FormLabel>
+              <FormLabel className="text-gray-700 dark:text-gray-300">Confirm New Password</FormLabel>
               <FormControl>
-                <Input placeholder="Confirm new password" type="password" {...field} />
+                <Input 
+                  placeholder="Confirm new password" 
+                  type="password" 
+                  className="border-gray-300 dark:border-gray-700 focus:border-purple-400 dark:focus:border-purple-500 focus:ring-purple-300 dark:focus:ring-purple-700" 
+                  {...field} 
+                />
               </FormControl>
-              <FormMessage />
+              <FormMessage className="text-pink-600 dark:text-pink-400" />
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full" disabled={isPending}>
+        <Button 
+          type="submit" 
+          className="w-full bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-300 dark:focus:ring-purple-800 mt-2" 
+          disabled={isPending}
+        >
           {isPending ? "Resetting password..." : "Reset Password"}
         </Button>
+        <div className="text-center text-sm mt-6">
+          <Link href="/login" className="text-pink-600 hover:text-pink-700 dark:text-pink-400 dark:hover:text-pink-300 font-medium">
+            Back to login
+          </Link>
+        </div>
       </form>
     </Form>
+  );
+}
+
+export function ResetPasswordForm() {
+  return (
+    <Suspense fallback={
+      <div className="text-center space-y-4">
+        <p>Loading reset form...</p>
+      </div>
+    }>
+      <ResetPasswordFormContent />
+    </Suspense>
   );
 } 
